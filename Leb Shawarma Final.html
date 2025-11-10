@@ -1,0 +1,1960 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <!-- UPDATED: Title -->
+  <title>SHAWARMA LEBANESE GRILL - Interactive Menu</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    :root {
+      --primary: #d4af37;
+      --primary-dark: #b89a30;
+      --secondary: #c0392b;
+      --dark: #1a1a1a;
+      --dark-card: #2c2c2c;
+      --light: #f8fafc;
+      --muted: #a0a0a0;
+      --success: #27ae60;
+      --danger: #e74c3c;
+      --gradient: linear-gradient(135deg, var(--secondary), var(--primary));
+    }
+    
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: var(--dark);
+      color: var(--muted);
+      line-height: 1.6;
+      /* Increased padding-bottom to ensure no overlap with checkout bar */
+      padding-bottom: 140px; 
+    }
+    
+    .container {
+      max-width: 1000px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+    
+    /* Header Styles */
+    .header {
+      text-align: center;
+      padding: 30px 20px;
+      background: var(--dark-card);
+      border-radius: 15px;
+      margin-bottom: 20px;
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .header::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 5px;
+      background: var(--gradient);
+    }
+    
+    .logo {
+      width: 100px;
+      height: 100px;
+      border-radius: 50%;
+      background: var(--gradient);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 32px;
+      color: var(--light);
+      font-weight: 800;
+      margin: 0 auto 20px;
+      box-shadow: 0 8px 20px rgba(212, 175, 55, 0.3);
+    }
+    
+    .restaurant-name {
+      font-size: 36px;
+      background: var(--gradient);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      font-weight: 800;
+      margin-bottom: 8px;
+    }
+    
+    .tagline {
+      font-size: 18px;
+      color: var(--muted);
+      margin: 5px 0;
+    }
+    
+    .contact-info {
+      font-size: 20px;
+      color: var(--primary);
+      font-weight: 600;
+      margin: 15px 0;
+    }
+    
+    /* Category Navigation */
+    .category-nav {
+      position: sticky;
+      top: 0;
+      background: var(--dark-card);
+      padding: 15px 0;
+      z-index: 100;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      overflow-x: auto;
+      white-space: nowrap;
+      scrollbar-width: none; /* Firefox */
+    }
+    
+    .category-nav::-webkit-scrollbar {
+      display: none; /* Safari and Chrome */
+    }
+    
+    .category-btn {
+      background: transparent;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      color: var(--muted);
+      padding: 10px 20px;
+      margin: 0 8px;
+      border-radius: 30px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s;
+      display: inline-block;
+    }
+    
+    .category-btn.active, .category-btn:hover {
+      background: var(--primary);
+      color: var(--dark);
+      border-color: var(--primary);
+      box-shadow: 0 4px 15px rgba(212, 175, 55, 0.3);
+    }
+    
+    /* Menu Sections */
+    .menu-section {
+      display: none;
+      padding: 30px 0;
+      animation: fadeIn 0.6s;
+    }
+    
+    .menu-section.active {
+      display: block;
+    }
+    
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    
+    .category-title {
+      font-size: 28px;
+      color: var(--primary);
+      text-align: center;
+      margin-bottom: 25px;
+      background: var(--gradient);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    
+    /* Menu Items */
+    .menu-item {
+      background: rgba(0, 0, 0, 0.25);
+      padding: 16px;
+      border-radius: 12px;
+      margin-bottom: 12px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    
+    .menu-item:hover {
+      background: rgba(0, 0, 0, 0.35);
+      transform: translateY(-3px) scale(1.02);
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4);
+    }
+    
+    .item-details {
+      flex: 1;
+    }
+    
+    .item-name {
+      color: var(--light);
+      font-weight: 600;
+      font-size: 17px;
+    }
+    
+    .item-price {
+      color: var(--primary);
+      font-weight: 700;
+      font-size: 18px;
+      margin-left: 15px;
+    }
+    
+    /* NEW "Add" Button */
+    .add-item-btn {
+      background: var(--primary);
+      color: var(--dark);
+      border: none;
+      padding: 8px 16px;
+      border-radius: 20px;
+      font-weight: 600;
+      cursor: pointer;
+      font-size: 14px;
+      transition: all 0.3s;
+      display: flex; /* Changed from inline-flex */
+      align-items: center;
+      gap: 6px;
+    }
+    
+    .add-item-btn:hover {
+      background: var(--primary-dark);
+      transform: scale(1.05);
+    }
+
+    .quantity-control {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(255, 255, 255, 0.1);
+      padding: 4px 8px;
+      border-radius: 20px;
+    }
+    
+    .quantity-control button {
+      background: var(--primary);
+      color: var(--dark);
+      border: none;
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      font-weight: bold;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+    
+    .quantity-control button:hover {
+      background: var(--primary-dark);
+      transform: scale(1.1);
+    }
+    
+    .quantity-control input {
+      width: 40px;
+      text-align: center;
+      background: transparent;
+      border: none;
+      color: var(--light);
+      font-weight: 600;
+      -moz-appearance: textfield; /* Firefox */
+    }
+    
+    .quantity-control input::-webkit-outer-spin-button,
+    .quantity-control input::-webkit-inner-spin-button {
+      -webkit-appearance: none;
+      margin: 0;
+    }
+    
+    /* Order Summary (Floating small one) */
+    .order-summary {
+      position: fixed;
+      /* Adjusted bottom to be above the checkout bar */
+      bottom: 80px; 
+      left: 0;
+      right: 0;
+      background: var(--dark-card);
+      padding: 15px;
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
+      z-index: 98;
+      max-height: 150px;
+      overflow-y: auto;
+      display: none;
+      animation: slideUp 0.4s;
+    }
+    
+    .order-summary.show {
+      display: block;
+    }
+    
+    .order-summary h4 {
+      color: var(--primary);
+      margin-bottom: 10px;
+      text-align: center;
+      font-size: 18px;
+    }
+    
+    .summary-item {
+      display: flex;
+      justify-content: space-between;
+      color: var(--light);
+      font-size: 15px;
+      margin: 6px 0;
+      padding: 0 15px;
+    }
+    
+    .summary-item .qty {
+      color: var(--primary);
+      font-weight: 700;
+    }
+    
+    .clear-btn {
+      background: var(--danger);
+      color: white;
+      padding: 8px 16px;
+      border: none;
+      border-radius: 30px;
+      font-size: 14px;
+      cursor: pointer;
+      margin: 10px auto;
+      display: block;
+    }
+    
+    .clear-btn:hover {
+      background: #c0392b;
+      transform: scale(1.05);
+    }
+    
+    /* Total Calculator / Checkout Bar */
+    .total-calculator {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: linear-gradient(135deg, #2c3e50, var(--dark));
+      text-align: center;
+      color: var(--primary);
+      box-shadow: 0 -5px 20px rgba(0, 0, 0, 0.5);
+      z-index: 99;
+      display: none; /* Hidden by default */
+      justify-content: space-between;
+      align-items: center;
+      padding: 12px 20px; /* Adjusted padding */
+    }
+    
+    .total-calculator.show {
+      display: flex; /* Changed from block to flex */
+      animation: pulse 0.5s ease;
+    }
+    
+    .total-calculator:hover {
+      cursor: pointer;
+      background: linear-gradient(135deg, var(--primary-dark), var(--primary));
+    }
+
+    .total-calculator:hover span,
+    .total-calculator:hover .checkout-prompt,
+    .total-calculator:hover #totalAmount {
+      color: var(--dark);
+    }
+    
+    .total-calculator span {
+      color: var(--light);
+      font-weight: 700;
+      font-size: 18px;
+    }
+    
+    .total-calculator .checkout-prompt {
+      color: var(--light);
+      font-size: 16px;
+      font-weight: 600;
+      opacity: 1; /* Was 0.8 */
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      transition: color 0.3s;
+    }
+
+    .total-calculator .checkout-prompt #totalAmount {
+      color: var(--primary);
+      font-weight: 700;
+      font-size: 20px;
+      transition: color 0.3s;
+    }
+    
+    /* Customer Info Section (Hidden) */
+    .customer-info {
+      /* This is now hidden and replaced by the modal */
+      display: none; 
+      background: var(--dark-card);
+      padding: 25px;
+      border-radius: 15px;
+      margin: 30px 0 20px;
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+    }
+    
+    .customer-info h4 {
+      color: var(--primary);
+      text-align: center;
+      font-size: 20px;
+      margin-bottom: 20px;
+    }
+    
+    .input-group {
+      margin-bottom: 15px;
+    }
+    
+    .input-group label {
+      display: block;
+      color: var(--muted);
+      margin-bottom: 8px;
+      font-weight: 600;
+    }
+    
+    .customer-input {
+      width: 100%;
+      padding: 12px 15px;
+      background: rgba(0, 0, 0, 0.25);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      color: var(--light);
+      border-radius: 8px;
+      font-size: 16px;
+      transition: border-color 0.3s, box-shadow 0.3s;
+    }
+    
+    .customer-input:focus {
+      outline: none;
+      border-color: var(--primary);
+      box-shadow: 0 0 10px rgba(212, 175, 55, 0.3);
+    }
+    
+    #orderError {
+      color: var(--danger);
+      text-align: center;
+      margin-top: 15px;
+      font-weight: 600;
+      display: none;
+    }
+    
+    /* Confirm Order Button */
+    .confirm-btn {
+      background: var(--primary);
+      color: var(--dark);
+      padding: 18px 40px;
+      border-radius: 50px;
+      font-weight: 700;
+      font-size: 18px;
+      border: none;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      box-shadow: 0 8px 25px rgba(212, 175, 55, 0.4);
+      transition: 0.3s;
+      margin: 10px 0 15px;
+    }
+    
+    .confirm-btn:hover {
+      background: var(--primary-dark);
+      transform: translateY(-4px) scale(1.05);
+      box-shadow: 0 12px 30px rgba(212, 175, 55, 0.5);
+    }
+    
+    /* WhatsApp Button */
+    .whatsapp-float {
+      position: fixed;
+      /* Adjusted bottom to be above the checkout bar */
+      bottom: 90px; 
+      right: 20px;
+      z-index: 9999;
+      animation: float 3s ease-in-out infinite;
+      cursor: pointer;
+    }
+    
+    .whatsapp-float img {
+      width: 60px;
+      transition: 0.3s;
+      border-radius: 50%;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+    }
+    
+    .whatsapp-float:hover img {
+      transform: scale(1.2);
+    }
+    
+    @keyframes float {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-10px); }
+    }
+    
+    @keyframes slideUp {
+      from { transform: translateY(100%); }
+      to { transform: translateY(0); }
+    }
+    
+    /* Footer */
+    .footer {
+      text-align: center;
+      color: var(--muted);
+      font-size: 14px;
+      margin-top: 40px;
+      padding: 20px;
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    
+    .creator-info {
+      color: var(--primary);
+      font-weight: 600;
+      margin-top: 10px;
+    }
+    
+    /* Responsive Design */
+    @media (max-width: 768px) {
+      .restaurant-name {
+        font-size: 28px;
+      }
+      
+      .category-btn {
+        padding: 8px 16px;
+        font-size: 13px;
+        margin: 0 4px;
+      }
+      
+      .menu-item {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+      }
+
+      /* On mobile, move buttons to the end */
+      .item-details {
+        width: 100%;
+      }
+      .add-item-btn, .quantity-control {
+        align-self: flex-end;
+      }
+      
+      .item-price {
+        margin-left: 0;
+      }
+      
+      .total-calculator {
+        font-size: 16px;
+        padding: 10px 15px;
+      }
+      .total-calculator span {
+        font-size: 14px;
+      }
+      .total-calculator .checkout-prompt {
+        font-size: 14px;
+        gap: 6px;
+      }
+      .total-calculator .checkout-prompt #totalAmount {
+        font-size: 18px;
+      }
+      
+      .order-summary {
+        bottom: 70px; /* Adjust for new bar height */
+        max-height: 120px;
+      }
+      
+      .whatsapp-float {
+        bottom: 80px; /* Adjust for new bar height */
+        width: 50px;
+        height: 50px;
+      }
+      .whatsapp-float img {
+        width: 50px;
+      }
+    }
+
+    /* Added Animations */
+    @keyframes shake {
+      0%, 100% { transform: translateX(0); }
+      25% { transform: translateX(-5px); }
+      75% { transform: translateX(5px); }
+    }
+
+    .order-confirmation, .loading-overlay {
+      animation: fadeIn 0.3s ease-in-out;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    @keyframes popIn {
+      0% { transform: scale(0.5); opacity: 0; }
+      70% { transform: scale(1.1); }
+      100% { transform: scale(1); opacity: 1; }
+    }
+
+    @keyframes bounce {
+      0%, 20%, 50%, 80%, 100% {transform: translateY(0);}
+      40% {transform: translateY(-10px);}
+      60% {transform: translateY(-5px);}
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    @keyframes bounceAdd {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.05); }
+      100% { transform: scale(1); }
+    }
+
+    @keyframes slideInRight {
+      from {
+        opacity: 0;
+        transform: translateX(30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateX(0);
+      }
+    }
+
+    @keyframes pulse {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.02); } /* Subtle pulse */
+      100% { transform: scale(1); }
+    }
+
+    @keyframes modalFadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    @keyframes welcomeSlideUp {
+      from {
+        opacity: 0;
+        transform: translateY(50px) scale(0.9);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
+    }
+
+    /* Checkout Modal Styles */
+    .checkout-modal {
+      display: none; /* Hidden by default */
+      position: fixed;
+      z-index: 1000;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      overflow: auto;
+      background-color: rgba(0, 0, 0, 0.8);
+      backdrop-filter: blur(5px);
+      -webkit-backdrop-filter: blur(5px);
+      animation: modalFadeIn 0.3s;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .checkout-modal-content {
+      background: var(--dark-card);
+      margin: auto;
+      padding: 25px;
+      border-radius: 15px;
+      width: 90%;
+      max-width: 500px;
+      position: relative;
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+      border-top: 4px solid var(--primary);
+      animation: welcomeSlideUp 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+
+    .checkout-modal-content h4 {
+      color: var(--primary);
+      text-align: center;
+      font-size: 24px;
+      margin-bottom: 20px;
+    }
+
+    .close-modal-btn {
+      position: absolute;
+      top: 10px;
+      right: 15px;
+      color: var(--muted);
+      font-size: 30px;
+      font-weight: bold;
+      background: none;
+      border: none;
+      cursor: pointer;
+      line-height: 1;
+    }
+
+    .close-modal-btn:hover {
+      color: var(--light);
+    }
+
+    /* Modal-specific order summary */
+    .modal-order-summary {
+      max-height: 200px;
+      overflow-y: auto;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 8px;
+      padding: 10px;
+      margin-bottom: 15px;
+      background: rgba(0, 0, 0, 0.2);
+    }
+
+    /* Re-use summary-item style from main CSS */
+    .modal-order-summary .summary-item {
+      font-size: 14px;
+      padding: 4px 0;
+    }
+
+    .modal-total {
+      text-align: right;
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--primary);
+      margin-bottom: 20px;
+      padding-top: 10px;
+      border-top: 1px dashed var(--muted);
+    }
+    
+    .modal-total span {
+      /* This is the Rs. 0 part */
+      color: var(--light);
+    }
+
+    .order-error-modal {
+      color: var(--danger);
+      text-align: center;
+      margin-top: 15px;
+      font-weight: 600;
+      display: none;
+    }
+
+  </style>
+</head>
+<body>
+  <div class="container">
+    <!-- Header -->
+    <header class="header">
+      <!-- UPDATED: Logo Text -->
+      <div class="logo">SLG</div>
+      <!-- UPDATED: Restaurant Name -->
+      <h1 class="restaurant-name">SHAWARMA LEBANESE GRILL</h1>
+      <!-- UPDATED: Taglines removed -->
+      <!-- <p class="tagline">(Rahat Bakery waly)</p> -->
+      <!-- <p class="tagline">Gate No.1, Askari-11, Service Lane, Ring Road, Lahore Cantt.</p> -->
+      <!-- UPDATED: Contact Info -->
+      <p class="contact-info">0309-0909991</p>
+    </header>
+
+    <!-- Category Navigation - UPDATED -->
+    <div class="category-nav">
+      <button class="category-btn active" data-cat="shawarma">SHAWARMA</button>
+      <button class="category-btn" data-cat="pocket">POCKET SHAWARMA</button>
+      <button class="category-btn" data-cat="platters">PLATTERS</button>
+      <button class="category-btn" data-cat="wraps">WRAPS</button>
+      <button class="category-btn" data-cat="burgers">BURGERS</button>
+      <button class="category-btn" data-cat="fries">FRIES</button>
+      <button class="category-btn" data-cat="deals">FAMILY DEALS</button>
+    </div>
+
+    <!-- Menu Sections - UPDATED -->
+    <div class="menu-sections">
+      
+      <!-- CATEGORY: SHAWARMA -->
+      <div class="menu-section active" id="shawarma">
+        <h3 class="category-title">SHAWARMA</h3>
+        
+        <div class="menu-item">
+          <div class="item-details">
+            <div class="item-name">Chicken Shawarma</div>
+            <div class="item-price">Rs. 330</div>
+          </div>
+          <div class="quantity-control" style="display: none;">
+            <button type="button" onclick="updateQty(this, -1)">-</button>
+            <input type="number" value="0" min="0" readonly>
+            <button type="button" onclick="updateQty(this, 1)">+</button>
+          </div>
+          <button class="add-item-btn" onclick="addItem(this)">
+            <i class="fa fa-plus"></i> Add
+          </button>
+        </div>
+
+        <div class="menu-item">
+          <div class="item-details">
+            <div class="item-name">Chicken Cheese Shawarma</div>
+            <div class="item-price">Rs. 380</div>
+          </div>
+          <div class="quantity-control" style="display: none;">
+            <button type="button" onclick="updateQty(this, -1)">-</button>
+            <input type="number" value="0" min="0" readonly>
+            <button type="button" onclick="updateQty(this, 1)">+</button>
+          </div>
+          <button class="add-item-btn" onclick="addItem(this)">
+            <i class="fa fa-plus"></i> Add
+          </button>
+        </div>
+
+        <div class="menu-item">
+          <div class="item-details">
+            <div class="item-name">Zinger Shawarma</div>
+            <div class="item-price">Rs. 380</div>
+          </div>
+          <div class="quantity-control" style="display: none;">
+            <button type="button" onclick="updateQty(this, -1)">-</button>
+            <input type="number" value="0" min="0" readonly>
+            <button type="button" onclick="updateQty(this, 1)">+</button>
+          </div>
+          <button class="add-item-btn" onclick="addItem(this)">
+            <i class="fa fa-plus"></i> Add
+          </button>
+        </div>
+
+        <div class="menu-item">
+          <div class="item-details">
+            <div class="item-name">Zinger Cheese shawarma</div>
+            <div class="item-price">Rs. 430</div>
+          </div>
+          <div class="quantity-control" style="display: none;">
+            <button type="button" onclick="updateQty(this, -1)">-</button>
+            <input type="number" value="0" min="0" readonly>
+            <button type="button" onclick="updateQty(this, 1)">+</button>
+          </div>
+          <button class="add-item-btn" onclick="addItem(this)">
+            <i class="fa fa-plus"></i> Add
+          </button>
+        </div>
+
+        <div class="menu-item">
+          <div class="item-details">
+            <div class="item-name">Lebanese Special Chicken (Olives, Mushroom, Cheese)</div>
+            <div class="item-price">Rs. 480</div>
+          </div>
+          <div class="quantity-control" style="display: none;">
+            <button type="button" onclick="updateQty(this, -1)">-</button>
+            <input type="number" value="0" min="0" readonly>
+            <button type="button" onclick="updateQty(this, 1)">+</button>
+          </div>
+          <button class="add-item-btn" onclick="addItem(this)">
+            <i class="fa fa-plus"></i> Add
+          </button>
+        </div>
+
+        <div class="menu-item">
+          <div class="item-details">
+            <div class="item-name">Deluxe Chicken (Fries + Jalapeno)</div>
+            <div class="item-price">Rs. 450</div>
+          </div>
+          <div class="quantity-control" style="display: none;">
+            <button type="button" onclick="updateQty(this, -1)">-</button>
+            <input type="number" value="0" min="0" readonly>
+            <button type="button" onclick="updateQty(this, 1)">+</button>
+          </div>
+          <button class="add-item-btn" onclick="addItem(this)">
+            <i class="fa fa-plus"></i> Add
+          </button>
+        </div>
+      </div>
+
+      <!-- CATEGORY: POCKET SHAWARMA -->
+      <div class="menu-section" id="pocket">
+        <h3 class="category-title">POCKET SHAWARMA</h3>
+        
+        <div class="menu-item">
+          <div class="item-details">
+            <div class="item-name">Chicken Pocket</div>
+            <div class="item-price">Rs. 370</div>
+          </div>
+          <div class="quantity-control" style="display: none;">
+            <button type="button" onclick="updateQty(this, -1)">-</button>
+            <input type="number" value="0" min="0" readonly>
+            <button type="button" onclick="updateQty(this, 1)">+</button>
+          </div>
+          <button class="add-item-btn" onclick="addItem(this)">
+            <i class="fa fa-plus"></i> Add
+          </button>
+        </div>
+
+        <div class="menu-item">
+          <div class="item-details">
+            <div class="item-name">Chicken Cheese pocket</div>
+            <div class="item-price">Rs. 420</div>
+          </div>
+          <div class="quantity-control" style="display: none;">
+            <button type="button" onclick="updateQty(this, -1)">-</button>
+            <input type="number" value="0" min="0" readonly>
+            <button type="button" onclick="updateQty(this, 1)">+</button>
+          </div>
+          <button class="add-item-btn" onclick="addItem(this)">
+            <i class="fa fa-plus"></i> Add
+          </button>
+        </div>
+
+        <div class="menu-item">
+          <div class="item-details">
+            <div class="item-name">Lebanese Special Chicken pocket</div>
+            <div class="item-price">Rs. 480</div>
+          </div>
+          <div class="quantity-control" style="display: none;">
+            <button type="button" onclick="updateQty(this, -1)">-</button>
+            <input type="number" value="0" min="0" readonly>
+            <button type="button" onclick="updateQty(this, 1)">+</button>
+          </div>
+          <button class="add-item-btn" onclick="addItem(this)">
+            <i class="fa fa-plus"></i> Add
+          </button>
+        </div>
+      </div>
+
+      <!-- CATEGORY: PLATTERS -->
+      <div class="menu-section" id="platters">
+        <h3 class="category-title">PLATTERS</h3>
+        
+        <div class="menu-item">
+          <div class="item-details">
+            <div class="item-name">Chicken platter</div>
+            <div class="item-price">Rs. 650</div>
+          </div>
+          <div class="quantity-control" style="display: none;">
+            <button type="button" onclick="updateQty(this, -1)">-</button>
+            <input type="number" value="0" min="0" readonly>
+            <button type="button" onclick="updateQty(this, 1)">+</button>
+          </div>
+          <button class="add-item-btn" onclick="addItem(this)">
+            <i class="fa fa-plus"></i> Add
+          </button>
+        </div>
+
+        <div class="menu-item">
+          <div class="item-details">
+            <div class="item-name">Chicken Cheese platter</div>
+            <div class="item-price">Rs. 710</div>
+          </div>
+          <div class="quantity-control" style="display: none;">
+            <button type="button" onclick="updateQty(this, -1)">-</button>
+            <input type="number" value="0" min="0" readonly>
+            <button type="button" onclick="updateQty(this, 1)">+</button>
+          </div>
+          <button class="add-item-btn" onclick="addItem(this)">
+            <i class="fa fa-plus"></i> Add
+          </button>
+        </div>
+
+        <div class="menu-item">
+          <div class="item-details">
+            <div class="item-name">Lebanese Special Chicken platter</div>
+            <div class="item-price">Rs. 780</div>
+          </div>
+          <div class="quantity-control" style="display: none;">
+            <button type="button" onclick="updateQty(this, -1)">-</button>
+            <input type="number" value="0" min="0" readonly>
+            <button type="button" onclick="updateQty(this, 1)">+</button>
+          </div>
+          <button class="add-item-btn" onclick="addItem(this)">
+            <i class="fa fa-plus"></i> Add
+          </button>
+        </div>
+      </div>
+
+      <!-- CATEGORY: WRAPS -->
+      <div class="menu-section" id="wraps">
+        <h3 class="category-title">WRAPS</h3>
+        
+        <div class="menu-item">
+          <div class="item-details">
+            <div class="item-name">Tikka Wrap</div>
+            <div class="item-price">Rs. 410</div>
+          </div>
+          <div class="quantity-control" style="display: none;">
+            <button type="button" onclick="updateQty(this, -1)">-</button>
+            <input type="number" value="0" min="0" readonly>
+            <button type="button" onclick="updateQty(this, 1)">+</button>
+          </div>
+          <button class="add-item-btn" onclick="addItem(this)">
+            <i class="fa fa-plus"></i> Add
+          </button>
+        </div>
+
+        <div class="menu-item">
+          <div class="item-details">
+            <div class="item-name">Fajita Wrap</div>
+            <div class="item-price">Rs. 440</div>
+          </div>
+          <div class="quantity-control" style="display: none;">
+            <button type="button" onclick="updateQty(this, -1)">-</button>
+            <input type="number" value="0" min="0" readonly>
+            <button type="button" onclick="updateQty(this, 1)">+</button>
+          </div>
+          <button class="add-item-btn" onclick="addItem(this)">
+            <i class="fa fa-plus"></i> Add
+          </button>
+        </div>
+
+        <div class="menu-item">
+          <div class="item-details">
+            <div class="item-name">Jalapeno Wrap</div>
+            <div class="item-price">Rs. 440</div>
+          </div>
+          <div class="quantity-control" style="display: none;">
+            <button type="button" onclick="updateQty(this, -1)">-</button>
+            <input type="number" value="0" min="0" readonly>
+            <button type="button" onclick="updateQty(this, 1)">+</button>
+          </div>
+          <button class="add-item-btn" onclick="addItem(this)">
+            <i class="fa fa-plus"></i> Add
+          </button>
+        </div>
+
+        <div class="menu-item">
+          <div class="item-details">
+            <div class="item-name">Zinger Wrap</div>
+            <div class="item-price">Rs. 440</div>
+          </div>
+          <div class="quantity-control" style="display: none;">
+            <button type="button" onclick="updateQty(this, -1)">-</button>
+            <input type="number" value="0" min="0" readonly>
+            <button type="button" onclick="updateQty(this, 1)">+</button>
+          </div>
+          <button class="add-item-btn" onclick="addItem(this)">
+            <i class="fa fa-plus"></i> Add
+          </button>
+        </div>
+      </div>
+
+      <!-- CATEGORY: BURGERS -->
+      <div class="menu-section" id="burgers">
+        <h3 class="category-title">BURGERS</h3>
+        
+        <div class="menu-item">
+          <div class="item-details">
+            <div class="item-name">Chicken Burger</div>
+            <div class="item-price">Rs. 320</div>
+          </div>
+          <div class="quantity-control" style="display: none;">
+            <button type="button" onclick="updateQty(this, -1)">-</button>
+            <input type="number" value="0" min="0" readonly>
+            <button type="button" onclick="updateQty(this, 1)">+</button>
+          </div>
+          <button class="add-item-btn" onclick="addItem(this)">
+            <i class="fa fa-plus"></i> Add
+          </button>
+        </div>
+
+        <div class="menu-item">
+          <div class="item-details">
+            <div class="item-name">Chicken Cheese Burger</div>
+            <div class="item-price">Rs. 360</div>
+          </div>
+          <div class="quantity-control" style="display: none;">
+            <button type="button" onclick="updateQty(this, -1)">-</button>
+            <input type="number" value="0" min="0" readonly>
+            <button type="button" onclick="updateQty(this, 1)">+</button>
+          </div>
+          <button class="add-item-btn" onclick="addItem(this)">
+            <i class="fa fa-plus"></i> Add
+          </button>
+        </div>
+
+        <div class="menu-item">
+          <div class="item-details">
+            <div class="item-name">Zinger Burger</div>
+            <div class="item-price">Rs. 450</div>
+          </div>
+          <div class="quantity-control" style="display: none;">
+            <button type="button" onclick="updateQty(this, -1)">-</button>
+            <input type="number" value="0" min="0" readonly>
+            <button type="button" onclick="updateQty(this, 1)">+</button>
+          </div>
+          <button class="add-item-btn" onclick="addItem(this)">
+            <i class="fa fa-plus"></i> Add
+          </button>
+        </div>
+
+        <div class="menu-item">
+          <div class="item-details">
+            <div class="item-name">Zinger Cheese Burger</div>
+            <div class="item-price">Rs. 490</div>
+          </div>
+          <div class="quantity-control" style="display: none;">
+            <button type="button" onclick="updateQty(this, -1)">-</button>
+            <input type="number" value="0" min="0" readonly>
+            <button type="button" onclick="updateQty(this, 1)">+</button>
+          </div>
+          <button class="add-item-btn" onclick="addItem(this)">
+            <i class="fa fa-plus"></i> Add
+          </button>
+        </div>
+      </div>
+
+      <!-- CATEGORY: FRIES -->
+      <div class="menu-section" id="fries">
+        <h3 class="category-title">FRIES</h3>
+        
+        <div class="menu-item">
+          <div class="item-details">
+            <div class="item-name">Classic Fries</div>
+            <div class="item-price">Rs. 360</div>
+          </div>
+          <div class="quantity-control" style="display: none;">
+            <button type="button" onclick="updateQty(this, -1)">-</button>
+            <input type="number" value="0" min="0" readonly>
+            <button type="button" onclick="updateQty(this, 1)">+</button>
+          </div>
+          <button class="add-item-btn" onclick="addItem(this)">
+            <i class="fa fa-plus"></i> Add
+          </button>
+        </div>
+
+        <div class="menu-item">
+          <div class="item-details">
+            <div class="item-name">Masala Fries</div>
+            <div class="item-price">Rs. 370</div>
+          </div>
+          <div class="quantity-control" style="display: none;">
+            <button type="button" onclick="updateQty(this, -1)">-</button>
+            <input type="number" value="0" min="0" readonly>
+            <button type="button" onclick="updateQty(this, 1)">+</button>
+          </div>
+          <button class="add-item-btn" onclick="addItem(this)">
+            <i class="fa fa-plus"></i> Add
+          </button>
+        </div>
+
+        <div class="menu-item">
+          <div class="item-details">
+            <div class="item-name">Garlic Fries</div>
+            <div class="item-price">Rs. 400</div>
+          </div>
+          <div class="quantity-control" style="display: none;">
+            <button type="button" onclick="updateQty(this, -1)">-</button>
+            <input type="number" value="0" min="0" readonly>
+            <button type="button" onclick="updateQty(this, 1)">+</button>
+          </div>
+          <button class="add-item-btn" onclick="addItem(this)">
+            <i class="fa fa-plus"></i> Add
+          </button>
+        </div>
+
+        <div class="menu-item">
+          <div class="item-details">
+            <div class="item-name">Loaded Fries</div>
+            <div class="item-price">Rs. 460</div>
+          </div>
+          <div class="quantity-control" style="display: none;">
+            <button type="button" onclick="updateQty(this, -1)">-</button>
+            <input type="number" value="0" min="0" readonly>
+            <button type="button" onclick="updateQty(this, 1)">+</button>
+          </div>
+          <button class="add-item-btn" onclick="addItem(this)">
+            <i class="fa fa-plus"></i> Add
+          </button>
+        </div>
+      </div>
+
+      <!-- CATEGORY: FAMILY DEALS -->
+      <div class="menu-section" id="deals">
+        <h3 class="category-title">FAMILY DEALS</h3>
+        
+        <div class="menu-item">
+          <div class="item-details">
+            <div class="item-name">Deal 1 – 4 Fajita Wraps</div>
+            <div class="item-price">Rs. 1,599</div>
+          </div>
+          <div class="quantity-control" style="display: none;">
+            <button type="button" onclick="updateQty(this, -1)">-</button>
+            <input type="number" value="0" min="0" readonly>
+            <button type="button" onclick="updateQty(this, 1)">+</button>
+          </div>
+          <button class="add-item-btn" onclick="addItem(this)">
+            <i class="fa fa-plus"></i> Add
+          </button>
+        </div>
+
+        <div class="menu-item">
+          <div class="item-details">
+            <div class="item-name">Deal 2 – 4 Zinger Burgers</div>
+            <div class="item-price">Rs. 1,599</div>
+          </div>
+          <div class="quantity-control" style="display: none;">
+            <button type="button" onclick="updateQty(this, -1)">-</button>
+            <input type="number" value="0" min="0" readonly>
+            <button type="button" onclick="updateQty(this, 1)">+</button>
+          </div>
+          <button class="add-item-btn" onclick="addItem(this)">
+            <i class="fa fa-plus"></i> Add
+          </button>
+        </div>
+
+        <div class="menu-item">
+          <div class="item-details">
+            <div class="item-name">Deal 3 – 2 Chicken Platters + 0.5 Drink</div>
+            <div class="item-price">Rs. 1,299</div>
+          </div>
+          <div class="quantity-control" style="display: none;">
+            <button type="button" onclick="updateQty(this, -1)">-</button>
+            <input type="number" value="0" min="0" readonly>
+            <button type="button" onclick="updateQty(this, 1)">+</button>
+          </div>
+          <button class="add-item-btn" onclick="addItem(this)">
+            <i class="fa fa-plus"></i> Add
+          </button>
+        </div>
+
+        <div class="menu-item">
+          <div class="item-details">
+            <div class="item-name">Deal 4 – 3 Chicken Cheese Shawarma</div>
+            <div class="item-price">Rs. 1,199</div>
+          </div>
+          <div class="quantity-control" style="display: none;">
+            <button type="button" onclick="updateQty(this, -1)">-</button>
+            <input type="number" value="0" min="0" readonly>
+            <button type="button" onclick="updateQty(this, 1)">+</button>
+          </div>
+          <button class="add-item-btn" onclick="addItem(this)">
+            <i class="fa fa-plus"></i> Add
+          </button>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Order Summary (Small floating one) -->
+    <div class="order-summary" id="orderSummary">
+      <h4>Your Order</h4>
+      <div id="summaryList"></div>
+      <button class="clear-btn" onclick="clearAll()">Clear All</button>
+    </div>
+
+    <!-- Total Calculator / CHECKOUT BAR -->
+    <div class="total-calculator" id="totalCalculator" onclick="openCheckoutModal()">
+      <span id="totalItemsText">Cart Khali Hai</span>
+      <span class="checkout-prompt">
+        <span id="totalAmount">Rs. 0</span> | VIEW CART & CHECKOUT <i class="fa fa-arrow-right"></i>
+      </span>
+    </div>
+    
+    <!-- This section is now hidden and replaced by the modal -->
+    <div style="display: none;">
+      <!-- Customer Info Form (Kept for syncing) -->
+      <div class="customer-info">
+        <h4>Customer Details</h4>
+        <div class="input-group">
+          <label for="customerPhone">Phone Number</label>
+          <input type="tel" id="customerPhone" class="customer-input" placeholder="e.g., 03001234567">
+        </div>
+        <div class="input-group">
+          <label for="customerAddress">Delivery Address</label>
+          <input type="text" id="customerAddress" class="customer-input" placeholder="Enter your full address">
+        </div>
+        <div id="orderError"></div>
+      </div>
+
+      <!-- Confirm Order Button (Hidden) -->
+      <div style="text-align: center;">
+        <button class="confirm-btn" id="confirmOrder">
+          <i class="fab fa-whatsapp"></i> Confirm Order via WhatsApp
+        </button>
+      </div>
+    </div>
+
+
+    <!-- Footer - UPDATED (Developer info remains) -->
+    <div class="footer">
+      <p>Created by <span class="creator-info">Amanullah</span></p>
+      <p>Contact: <span class="creator-info">03015956684</span></p>
+    </div>
+  </div>
+
+  <!-- WhatsApp Button -->
+  <a href="#" class="whatsapp-float" id="whatsappBtn">
+    <img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" alt="WhatsApp">
+  </a>
+
+  <!-- Checkout Modal -->
+  <div id="checkoutModal" class="checkout-modal">
+    <div class="checkout-modal-content">
+      <button class="close-modal-btn" onclick="closeCheckoutModal()">&times;</button>
+      <h4>Confirm Your Order</h4>
+      
+      <!-- Order Summary in Modal -->
+      <div id="modalOrderSummary" class="modal-order-summary">
+        <!-- Summary items will be injected here by JS -->
+      </div>
+      <div id="modalTotal" class="modal-total">
+        <!-- Total will be injected here -->
+      </div>
+
+      <!-- Customer Details Form -->
+      <div class="customer-info-modal">
+        <!-- NEW FIELD -->
+        <div class="input-group">
+          <label for="modalCustomerName">Aapka Naam (Name)</label>
+          <input type="text" id="modalCustomerName" class="customer-input" placeholder="Poora naam likhein" required>
+        </div>
+        <div class="input-group">
+          <label for="modalCustomerPhone">Phone Number (فون نمبر)</label>
+          <input type="tel" id="modalCustomerPhone" class="customer-input" placeholder="e.g., 03001234567" required>
+        </div>
+        <div class="input-group">
+          <label for="modalCustomerAddress">Delivery Address (ڈیلیوری ایڈریس)</label>
+          <input type="text" id="modalCustomerAddress" class="customer-input" placeholder="Apna poora address likhein" required>
+        </div>
+        <!-- NEW FIELD -->
+        <div class="input-group">
+          <label for="modalCustomerInstructions">Hidayat (Instructions)</label>
+          <input type="text" id="modalCustomerInstructions" class="customer-input" placeholder="e.g., 'extra raita', 'kam mirch'">
+        </div>
+        <div id="modalOrderError" class="order-error-modal"></div>
+      </div>
+
+      <!-- Confirm Order Button -->
+      <div style="text-align: center;">
+        <button class="confirm-btn" id="modalConfirmOrder">
+          <i class="fab fa-whatsapp"></i> WhatsApp per Order Bhejein
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Category Navigation
+    document.querySelectorAll('.category-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.category-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        const cat = btn.dataset.cat;
+        document.querySelectorAll('.menu-section').forEach(s => s.classList.remove('active'));
+        document.getElementById(cat).classList.add('active');
+      });
+    });
+
+    // NEW: Add Item Function
+    function addItem(btnEl) {
+      const menuItem = btnEl.closest('.menu-item');
+      const quantityControl = menuItem.querySelector('.quantity-control');
+      const input = quantityControl.querySelector('input');
+      
+      // Set quantity to 1
+      input.value = 1;
+      
+      // Hide "Add" button, show quantity control
+      btnEl.style.display = 'none';
+      quantityControl.style.display = 'flex';
+
+      // Announce and update total
+      const itemName = menuItem.querySelector('.item-name').textContent;
+      const cleanName = itemName.split(' - ')[0].trim();
+      itemAnnouncer.announceItem(cleanName, 1);
+      
+      updateSummaryAndTotal();
+    }
+
+
+    // MODIFIED: Update Quantity Function
+    function updateQty(btn, delta) {
+      const quantityControl = btn.closest('.quantity-control');
+      const input = quantityControl.querySelector('input');
+      let qty = parseInt(input.value) + delta;
+      if (qty < 0) qty = 0;
+
+      const oldQty = parseInt(input.value);
+      input.value = qty;
+
+      const menuItem = btn.closest('.menu-item');
+
+      // *** NEW LOGIC ***
+      // If quantity becomes 0, hide quantity control and show "Add" button
+      if (qty === 0) {
+        const addBtn = menuItem.querySelector('.add-item-btn');
+        quantityControl.style.display = 'none';
+        if(addBtn) addBtn.style.display = 'flex';
+      }
+      // *** END NEW LOGIC ***
+
+      if (delta > 0) {
+        // Add bounce effect when adding items
+        menuItem.style.animation = 'bounceAdd 0.3s ease';
+        setTimeout(() => {
+          menuItem.style.animation = '';
+        }, 300);
+
+        // Announce item when added (not when removed)
+        if (qty > oldQty) {
+          const itemName = menuItem.querySelector('.item-name').textContent;
+          const cleanName = itemName.split(' - ')[0].trim();
+          itemAnnouncer.announceItem(cleanName, qty);
+        }
+      }
+
+      updateSummaryAndTotal();
+    }
+
+
+    // MODIFIED: Update Summary and Total
+    function updateSummaryAndTotal() {
+      let total = 0;
+      const items = [];
+      let totalItems = 0; // New variable
+      
+      document.querySelectorAll('.menu-item').forEach(item => {
+        const input = item.querySelector('.quantity-control input');
+        const qty = parseInt(input.value);
+
+        // *** NEW LOGIC: Sync UI (Add button vs Qty) ***
+        const quantityControl = item.querySelector('.quantity-control');
+        const addBtn = item.querySelector('.add-item-btn');
+
+        if (qty > 0) {
+          if (quantityControl) quantityControl.style.display = 'flex';
+          if (addBtn) addBtn.style.display = 'none';
+          
+          totalItems += qty; // Add to total item count
+          const name = item.querySelector('.item-name').textContent;
+          const priceStr = item.querySelector('.item-price').textContent;
+          const price = parseInt(priceStr.replace(/[^\d,]/g, '')); // Handle commas in price
+          total += qty * price;
+          items.push({ name, qty, price });
+
+        } else {
+          if (quantityControl) quantityControl.style.display = 'none';
+          if (addBtn) addBtn.style.display = 'flex';
+        }
+        // *** END NEW LOGIC ***
+      });
+
+      // Update Total Bar
+      document.getElementById('totalAmount').textContent = 'Rs. ' + total.toLocaleString(); // Add commas
+      const calc = document.getElementById('totalCalculator');
+      const totalItemsText = document.getElementById('totalItemsText');
+
+      if (total > 0) {
+        calc.classList.add('show');
+        totalItemsText.textContent = `${totalItems} ${totalItems > 1 ? 'Items' : 'Item'} in Cart`;
+      } else {
+        calc.classList.remove('show');
+        totalItemsText.textContent = 'Cart Khali Hai'; // Reset
+      }
+
+      // Update floating summary box
+      const summaryList = document.getElementById('summaryList');
+      const summaryBox = document.getElementById('orderSummary');
+      if (items.length > 0) {
+        summaryList.innerHTML = items.map(i => 
+          `<div class="summary-item"><span>${i.name}</span><span class="qty">${i.qty} × Rs. ${i.price.toLocaleString()}</span></div>`
+        ).join('');
+        summaryBox.classList.add('show');
+      } else {
+        summaryList.innerHTML = '';
+        summaryBox.classList.remove('show');
+      }
+    }
+
+    // MODIFIED: Clear All Function
+    function clearAll() {
+      // Reset all inputs to 0
+      document.querySelectorAll('.quantity-control input').forEach(inp => inp.value = 0);
+      
+      // Reset hidden form (still good to clear)
+      document.getElementById('customerPhone').value = '';
+      document.getElementById('customerAddress').value = '';
+
+      // Reset modal form
+      document.getElementById('modalCustomerName').value = ''; // NEW
+      document.getElementById('modalCustomerPhone').value = '';
+      document.getElementById('modalCustomerAddress').value = '';
+      document.getElementById('modalCustomerInstructions').value = ''; // NEW
+      document.getElementById('modalOrderError').style.display = 'none';
+      
+      // This will now also reset the UI (hide qty, show add btn)
+      updateSummaryAndTotal();
+      
+      // Close modal if open
+      closeCheckoutModal();
+    }
+
+    // --- START OF NEW FEATURES ---
+
+    // 1. Open/Close Checkout Modal
+    function openCheckoutModal() {
+      // 1. Check if cart is empty
+      const order = quickReorderSystem.getStoredOrder(); // Use existing system
+      if (!order || Object.keys(order).length === 0) {
+        // Show a temporary message if cart is empty
+        quickReorderSystem.showMessage('Pehle cart mein items add karein.');
+        return;
+      }
+      
+      // 2. Populate modal summary
+      const summaryList = document.getElementById('summaryList').innerHTML;
+      document.getElementById('modalOrderSummary').innerHTML = summaryList;
+
+      // 3. Populate modal total
+      const totalText = document.getElementById('totalAmount').textContent;
+      document.getElementById('modalTotal').innerHTML = `Total: <span>${totalText}</span>`;
+
+      // 4. Show the modal
+      document.getElementById('checkoutModal').style.display = 'flex';
+
+      // 5. Pre-fill form from main form (if user already typed)
+      // Note: We don't have a visible name/instructions field, but we sync phone/address
+      document.getElementById('modalCustomerPhone').value = document.getElementById('customerPhone').value;
+      document.getElementById('modalCustomerAddress').value = document.getElementById('customerAddress').value;
+    }
+
+    function closeCheckoutModal() {
+      document.getElementById('checkoutModal').style.display = 'none';
+    }
+
+    // 2. Text-to-Speech for Item Announcements
+    class ItemAnnouncer {
+      constructor() {
+        this.speech = null;
+        this.isSpeaking = false;
+        this.selectedVoice = null;
+        this.initSpeech();
+      }
+
+      initSpeech() {
+        if ('speechSynthesis' in window) {
+          this.speech = window.speechSynthesis;
+
+          this.getVoices().then(voices => {
+            const englishVoice = voices.find(voice =>
+              voice.lang.includes('en') && (voice.name.includes('Female') || voice.name.includes('Google') || voice.name.includes('Zira'))
+            ) || voices.find(voice => voice.lang.includes('en')) || voices[0];
+
+            if (englishVoice) {
+              this.selectedVoice = englishVoice;
+            }
+          });
+        }
+      }
+
+      getVoices() {
+        return new Promise((resolve) => {
+          let voices = speechSynthesis.getVoices();
+          if (voices.length) {
+            resolve(voices);
+            return;
+          }
+          speechSynthesis.addEventListener('voiceschanged', () => {
+            voices = speechSynthesis.getVoices();
+            resolve(voices);
+          });
+        });
+      }
+
+      speak(text) {
+        if (!this.speech || this.isSpeaking) return;
+        this.speech.cancel();
+        const utterance = new SpeechSynthesisUtterance(text);
+        if (this.selectedVoice) {
+          utterance.voice = this.selectedVoice;
+        }
+        utterance.rate = 0.9;
+        utterance.pitch = 1.1;
+        utterance.volume = 0.8;
+        utterance.onstart = () => { this.isSpeaking = true; };
+        utterance.onend = () => { this.isSpeaking = false; };
+        utterance.onerror = () => { this.isSpeaking = false; };
+        this.speech.speak(utterance);
+      }
+
+      announceItem(itemName, quantity) {
+        const messages = [
+          `Added ${quantity} ${itemName} to your order`,
+          `${itemName} added to cart`,
+          `You selected ${quantity} ${itemName}`,
+          `${itemName} - excellent choice!`
+        ];
+        const randomMessage = messages[Math.floor(Math.random() * messages.length)];
+        this.speak(randomMessage);
+      }
+    }
+
+    // 3. MODIFIED: Enhanced WhatsApp Integration (from Modal)
+    function sendWhatsAppOrderFromModal() {
+      const items = [];
+      let total = 0;
+      
+      document.querySelectorAll('.quantity-control input').forEach(inp => {
+        const qty = parseInt(inp.value);
+        if (qty > 0) {
+          const name = inp.closest('.menu-item').querySelector('.item-name').textContent;
+          const priceStr = inp.closest('.menu-item').querySelector('.item-price').textContent;
+          const price = parseInt(priceStr.replace(/[^\d,]/g, '')); // Handle commas
+          const itemTotal = price * qty;
+          total += itemTotal;
+          items.push({
+            name,
+            qty,
+            price,
+            total: itemTotal
+          });
+        }
+      });
+
+      // *** Read from MODAL inputs ***
+      const customerName = document.getElementById('modalCustomerName').value.trim(); // NEW
+      const customerPhone = document.getElementById('modalCustomerPhone').value.trim();
+      const customerAddress = document.getElementById('modalCustomerAddress').value.trim();
+      const customerInstructions = document.getElementById('modalCustomerInstructions').value.trim(); // NEW
+      const orderError = document.getElementById('modalOrderError');
+
+      // Validation
+      if (items.length === 0) {
+        orderError.textContent = 'Aapka cart khali hai. (Your cart is empty.)';
+        orderError.style.display = 'block';
+        orderError.style.animation = 'shake 0.5s';
+        setTimeout(() => orderError.style.animation = '', 500);
+        return;
+      }
+      // *** NEW VALIDATION ***
+      if (customerName === '') {
+        orderError.textContent = 'Please enter your name. ( اپنا نام درج کریں)';
+        orderError.style.display = 'block';
+        orderError.style.animation = 'shake 0.5s';
+        setTimeout(() => orderError.style.animation = '', 500);
+        return;
+      }
+      if (customerPhone === '') {
+        orderError.textContent = 'Please enter your phone number. ( اپنا فون نمبر درج کریں)';
+        orderError.style.display = 'block';
+        orderError.style.animation = 'shake 0.5s';
+        setTimeout(() => orderError.style.animation = '', 500);
+        return;
+      }
+      if (customerAddress === '') {
+        orderError.textContent = 'Please enter your delivery address. ( اپنا ڈیلیوری ایڈریس درج کریں)';
+        orderError.style.display = 'block';
+        orderError.style.animation = 'shake 0.5s';
+        setTimeout(() => orderError.style.animation = '', 500);
+        return;
+      }
+
+      orderError.style.display = 'none';
+
+      // Enhanced message formatting
+      // UPDATED: Restaurant Name
+      let message = "🥙 *SHAWARMA LEBANESE GRILL ORDER* 🥙%0A%0A";
+      message += "*Order Details:*%0A";
+      message += "────────────────%0A";
+      
+      items.forEach(item => {
+        message += `• ${item.qty}x ${item.name}%0A`;
+        message += `  (Rs. ${item.price.toLocaleString()} × ${item.qty} = *Rs. ${item.total.toLocaleString()}*)%0A`;
+      });
+      
+      message += "%0A────────────────%0A";
+      message += `*Grand Total: Rs. ${total.toLocaleString()}*%0A%0A`;
+      
+      message += "*Customer Information:*%0A";
+      message += `🧑 Name: ${customerName}%0A`; // NEW
+      message += `📞 Phone: ${customerPhone}%0A`;
+      message += `🏠 Address: ${customerAddress}%0A`;
+      
+      // NEW: Add instructions if they exist
+      if (customerInstructions) {
+         message += `📝 Instructions: ${customerInstructions}%0A%0A`;
+      } else {
+         message += "%0A%0A";
+      }
+      
+      message += "⏰ *Delivery Instructions:*%0A";
+      message += "Please confirm order and delivery time.%0A%0A";
+      
+      message += "Thank you! ☺%0A";
+      message += "────────────────%0A";
+      message += "_Digital Menu by Amanullah (03015956684)_";
+
+      // UPDATED: WhatsApp Number
+      const url = `https://wa.me/923090909991?text=${message}`;
+      
+      showLoadingAnimation();
+      
+      setTimeout(() => {
+        window.open(url, '_blank');
+        
+        setTimeout(() => {
+          closeCheckoutModal(); // Close the modal
+          showOrderConfirmation();
+          clearAll(); // Clear the order
+        }, 1000);
+      }, 1500);
+    }
+
+    // 4. Loading Animation Function
+    function showLoadingAnimation() {
+      const loadingHTML = `
+        <div class="loading-overlay" style="
+          position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+          background: rgba(0,0,0,0.8); z-index: 9999; display: flex;
+          align-items: center; justify-content: center; animation: fadeIn 0.3s;
+        ">
+          <div style="
+            background: var(--dark-card); padding: 30px; border-radius: 15px;
+            text-align: center; border: 2px solid var(--primary);
+          ">
+            <div class="loading-spinner" style="
+              width: 50px; height: 50px; border: 4px solid var(--muted);
+              border-top: 4px solid var(--primary); border-radius: 50%;
+              animation: spin 1s linear infinite; margin: 0 auto 20px;
+            "></div>
+            <p style="color: var(--primary); font-weight: bold; font-size: 18px;">
+              Sending to WhatsApp...
+            </p>
+          </div>
+        </div>
+      `;
+      document.body.insertAdjacentHTML('beforeend', loadingHTML);
+      
+      setTimeout(() => {
+        const loading = document.querySelector('.loading-overlay');
+        if (loading) loading.remove();
+      }, 1500);
+    }
+
+    // 5. Order Confirmation Animation
+    function showOrderConfirmation() {
+      const confirmationHTML = `
+        <div class="order-confirmation" style="
+          position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+          background: rgba(0,0,0,0.9); z-index: 10000; display: flex;
+          align-items: center; justify-content: center; animation: fadeIn 0.5s;
+          padding: 20px;
+        ">
+          <div style="
+            background: var(--dark-card); padding: 40px; border-radius: 20px;
+            text-align: center; max-width: 400px; width: 100%;
+            border: 3px solid var(--primary);
+            box-shadow: 0 15px 50px rgba(212,175,55,0.4);
+            animation: popIn 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+          ">
+            <div style="font-size: 60px; margin-bottom: 20px; animation: bounce 2s infinite;">🎉</div>
+            <h2 style="color: var(--primary); margin-bottom: 15px; font-size: 28px;">Order Confirmed!</h2>
+            <p style="color: var(--muted); margin-bottom: 10px; font-size: 18px;">Thank you for your order!</p>
+            <p style="color: var(--light); margin-bottom: 25px; font-size: 16px;">Your order has been sent to WhatsApp successfully.</p>
+            <button onclick="this.closest('.order-confirmation').remove()" 
+                    style="
+                      background: var(--primary); color: var(--dark); border: none;
+                      padding: 15px 40px; border-radius: 25px; font-weight: bold;
+                      cursor: pointer; font-size: 16px; transition: 0.3s;
+                    ">
+              Continue Shopping
+            </button>
+          </div>
+        </div>
+      `;
+      document.body.insertAdjacentHTML('beforeend', confirmationHTML);
+    }
+
+    
+    // 6. Quick Reorder (Session Storage Only)
+    class QuickReorder {
+      constructor() {
+        this.currentOrder = this.getStoredOrder();
+      }
+
+      getStoredOrder() {
+        return JSON.parse(sessionStorage.getItem('currentOrder') || '{}');
+      }
+
+      saveCurrentOrder() {
+        const order = {};
+        // MODIFIED: Target the correct input
+        document.querySelectorAll('.quantity-control input').forEach(inp => {
+          const qty = parseInt(inp.value);
+          if (qty > 0) {
+            const name = inp.closest('.menu-item').querySelector('.item-name').textContent;
+            order[name] = qty;
+          }
+        });
+        sessionStorage.setItem('currentOrder', JSON.stringify(order));
+      }
+
+      quickReorder() {
+        const storedOrder = this.getStoredOrder();
+        if (Object.keys(storedOrder).length === 0) {
+          this.showMessage('No previous order found in this session.');
+          return;
+        }
+
+        clearAll(); // Clear current order first
+
+        // Apply stored order
+        document.querySelectorAll('.menu-item').forEach(item => {
+          const name = item.querySelector('.item-name').textContent;
+          if (storedOrder[name]) {
+            // MODIFIED: Target the correct input
+            const input = item.querySelector('.quantity-control input');
+            input.value = storedOrder[name];
+          }
+        });
+
+        updateSummaryAndTotal(); // This will show the controls
+        this.showMessage('Previous order loaded successfully!');
+      }
+
+      showMessage(text) {
+        const msg = document.createElement('div');
+        msg.style.cssText = `
+          position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
+          background: var(--success); color: white; padding: 20px 30px;
+          border-radius: 10px; z-index: 10000; font-weight: bold;
+          box-shadow: 0 5px 20px rgba(0,0,0,0.3);
+        `;
+        msg.textContent = text;
+        document.body.appendChild(msg);
+
+        setTimeout(() => msg.remove(), 2500);
+      }
+    }
+    
+    function addQuickReorderButton() {
+      const reorderBtnHTML = `
+        <div style="text-align: center; margin: 20px 0;">
+          <button onclick="quickReorderSystem.quickReorder()" 
+                  class="confirm-btn" style="background: var(--success); font-size: 16px; padding: 14px 30px;">
+            🔄 Quick Reorder Last Session
+          </button>
+        </div>
+      `;
+      // Insert before the (hidden) customer info box
+      document.querySelector('[style="display: none;"]').insertAdjacentHTML('beforebegin', reorderBtnHTML);
+    }
+    
+    // 7. MODIFIED: Cart Saving (Session Storage)
+    function setupCartAutoSave() {
+      // Save cart whenever quantity changes or item is added
+      document.addEventListener('click', (e) => {
+        if (e.target.closest('.quantity-control button') || e.target.closest('.add-item-btn')) {
+          // Use a small delay to ensure input value is updated
+          setTimeout(() => {
+            quickReorderSystem.saveCurrentOrder();
+          }, 100);
+        }
+      });
+
+      // Load saved cart on page load
+      window.addEventListener('load', () => {
+        const savedOrder = quickReorderSystem.getStoredOrder();
+        if (Object.keys(savedOrder).length > 0) {
+          document.querySelectorAll('.menu-item').forEach(item => {
+            const name = item.querySelector('.item-name').textContent;
+            if (savedOrder[name]) {
+              // MODIFIED: Target the correct input
+              const input = item.querySelector('.quantity-control input');
+              input.value = savedOrder[name];
+            }
+          });
+          updateSummaryAndTotal(); // This will now show the qty controls
+        }
+      });
+    }
+
+    // 8. Welcome Modal Function - UPDATED
+    function showWelcomeModal() {
+      if (!sessionStorage.getItem('welcomeShown')) {
+        const welcomeHTML = `
+        <div class="welcome-modal" style="
+          position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+          background: rgba(0,0,0,0.95); z-index: 9999; display: flex;
+          align-items: center; justify-content: center; animation: modalFadeIn 0.6s;
+          padding: 20px;
+        ">
+          <div style="
+            background: linear-gradient(135deg, var(--dark-card), #1a1a1a);
+            padding: 40px 30px; border-radius: 25px; text-align: center;
+            max-width: 450px; width: 100%; border: 3px solid var(--primary);
+            box-shadow: 0 20px 60px rgba(212,175,55,0.3);
+            animation: welcomeSlideUp 0.8s cubic-bezier(0.34, 1.56, 0.64, 1);
+          ">
+            <div style="font-size: 70px; margin-bottom: 20px; animation: float 3s ease-in-out infinite;">🥙</div>
+            <h2 style="color: var(--primary); margin-bottom: 15px; font-size: 32px; font-weight: 800;">
+              Welcome to Shawarma Lebanese Grill!
+            </h2>
+            <p style="color: var(--muted); margin-bottom: 10px; font-size: 16px; line-height: 1.6;">
+              1. Item select karne ke liye <strong style='color: var(--primary)'>+ Add</strong> button dabayein.
+            </p>
+             <p style="color: var(--muted); margin-bottom: 25px; font-size: 16px; line-height: 1.6;">
+              2. Order bhejne ke liye neechay <strong style='color: var(--primary)'>Checkout</strong> bar pe click karein.
+            </p>
+            <button onclick="this.closest('.welcome-modal').remove(); sessionStorage.setItem('welcomeShown', 'true');"
+                    style="
+                      background: var(--primary); color: var(--dark); border: none;
+                      padding: 16px 45px; border-radius: 30px; font-weight: bold;
+                      cursor: pointer; font-size: 16px; transition: all 0.3s;
+                      box-shadow: 0 8px 25px rgba(212,175,55,0.4);
+                    "
+                    onmouseover="this.style.transform='translateY(-2px) scale(1.05)'"
+                    onmouseout="this.style.transform='translateY(0) scale(1)'">
+              🚀 Start Ordering
+            </button>
+          </div>
+        </div>
+        `;
+        document.body.insertAdjacentHTML('beforeend', welcomeHTML);
+      }
+    }
+    
+    // --- END OF NEW ADVANCED FEATURES ---
+
+    // 🎯 Complete Implementation:
+    // Initialize all advanced features
+    const itemAnnouncer = new ItemAnnouncer();
+    const quickReorderSystem = new QuickReorder();
+    
+    // Initialize on page load
+    window.addEventListener('load', function() {
+      // Show welcome modal
+      setTimeout(showWelcomeModal, 500);
+      
+      // Add quick reorder button
+      addQuickReorderButton();
+      
+      // Setup cart auto-save (this also handles loading the saved cart)
+      setupCartAutoSave();
+      
+      // Enhanced WhatsApp integration from MODAL
+      document.getElementById('modalConfirmOrder').addEventListener('click', sendWhatsAppOrderFromModal);
+      
+      // --- FORM SYNCING ---
+      // Sync modal inputs back to main (hidden) form
+      document.getElementById('modalCustomerPhone').addEventListener('input', (e) => {
+        document.getElementById('customerPhone').value = e.target.value;
+      });
+      document.getElementById('modalCustomerAddress').addEventListener('input', (e) => {
+        document.getElementById('customerAddress').value = e.target.value;
+      });
+      
+      // Update float button to trigger the confirm order logic
+      document.getElementById('whatsappBtn').addEventListener('click', function(e) {
+        e.preventDefault();
+        // Check if there are items, if so, open checkout modal
+        const order = quickReorderSystem.getStoredOrder();
+        if (order && Object.keys(order).length > 0) {
+             openCheckoutModal();
+        } else {
+            // If no items, just open a blank chat
+             // UPDATED: WhatsApp Number and Restaurant Name
+             const url = `https://wa.me/923090909991?text=Hello%20SHAWARMA%20LEBANESE%20GRILL%21`;
+             window.open(url, '_blank');
+        }
+      });
+
+      // Initial call to set up the summary/total on load (in case of auto-save)
+      // This is now handled by setupCartAutoSave()
+      // updateSummaryAndTotal(); 
+    });
+
+  </script>
+</body>
+</html>
+
+
